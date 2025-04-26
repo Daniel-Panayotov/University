@@ -1,0 +1,19 @@
+Ex1:
+
+2
+1,2
+1,2
+
+EX2:
+
+int getCount(Node* head) {
+    int count = 0;
+    Node* curr = head;
+
+    while (curr) {
+        count++;
+        curr = curr->next;           
+    }
+
+    return count;
+}	

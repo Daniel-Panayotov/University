@@ -1,0 +1,17 @@
+void main() {
+
+}
+
+void DelBook(int y, Node &head) {
+
+   Node* prev = head;
+   Node* curr = prev->next;
+
+
+   while(curr != NULL) {
+      
+      if (curr->y < y) prev->next = curr->next;     
+
+	  curr = curr->next;
+   }
+}
