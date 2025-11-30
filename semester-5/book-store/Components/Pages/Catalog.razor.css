@@ -1,8 +1,27 @@
 ﻿.page-container {
     height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.catalog {}
+.catalog {
+    height: 100%;
+    width: 100%;
+    max-width: 50rem;
+}
 
-.book {}
+.book-container {
+    width: 25%;
+    min-height: 25rem;
+    float: left;
+    padding-inline: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+    .book-container > .book {
+        width: 100%;
+        min-height: 25rem;
+        box-shadow: 0 3px 2px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+    }

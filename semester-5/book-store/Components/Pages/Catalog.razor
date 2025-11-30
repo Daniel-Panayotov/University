@@ -10,13 +10,26 @@
     <div class="catalog">
         @foreach(var book in books)
         {
-            <div class="book">
-                @book.Name
+            <div class="book-container">
+                <div class="book">
+                    <img src="@book.CoverLink"/>
+                    @book.Name
+                </div>
             </div>
         }
+        <div class="book-container">
+            <div class="book">
+                baba
+            </div>
+        </div>
+        <div class="book-container">
+            <div class="book">
+                baba
+            </div>
+        </div>
     </div>
 
-    <button @onclick="FetchBooks">Fetch</button>
+    @* <button @onclick="FetchBooks">Fetch</button> *@
 </div>
 
 
