@@ -14,14 +14,14 @@ public class BookController : Controller
     public BookController(BookStoreContext dbCtx) {  _ctx = dbCtx; }
 
     [HttpGet("get-paginated")]
-    public async Task<IActionResult> getPaginated([FromQuery] string? search, [FromQuery] int pageSize = 5, [FromQuery] int page = 1)
+    public async Task<IActionResult> getPaginated([FromQuery] string? search, [FromQuery] int? pageSize = 5, [FromQuery] int? page = 1)
     {
         if (string.IsNullOrWhiteSpace(search)) search = "";
 
         var query = _ctx.Books
             .Where(b => b.Name.ToLower().Contains(search.ToLower()) || b.Author.ToLower().Contains(search.ToLower()))
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize);
+            .Skip((page.Value - 1) * pageSize.Value)
+            .Take(pageSize.Value);
 
         List<Book> books = await query.ToListAsync();
         List<BookDTO> bookDTOs = books.Select(b => b.ToDTO()).ToList();

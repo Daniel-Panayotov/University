@@ -1,0 +1,48 @@
+﻿@using book_store.Dtos;
+
+@inject HttpClient httpClient;
+
+@rendermode InteractiveServer
+
+@page "/"
+
+<div class="page-container">
+    <div class="catalog">
+        @foreach(var book in books)
+        {
+            <div class="book">
+                @book.Name
+            </div>
+        }
+    </div>
+
+    <button @onclick="FetchBooks">Fetch</button>
+</div>
+
+
+@code {
+    List<BookDTO> books = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {            
+            await FetchBooks();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    private async Task FetchBooks()
+    {
+        var res = await httpClient.GetAsync("api/books/get-paginated?page=1&pageSize=3");
+        var value = await res.Content.ReadFromJsonAsync<List<BookDTO>>();
+
+        if (!res.IsSuccessStatusCode) return;
+
+        books = value!;
+        StateHasChanged();
+    }
+}
