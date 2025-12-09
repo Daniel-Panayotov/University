@@ -50,7 +50,27 @@ public class SeedData
                 Pages = 576,
                 Year = 2023,
                 Price = 15,
-            });
+            },
+            new Book 
+            { 
+                BookIsbn = "0999851160",
+                Name = "Of Shadow and Sea (The Elder Empire - Shadow Book 1)",
+                Author = "Will Wight",
+                CoverLink = "https://m.media-amazon.com/images/I/81TbK-AKcOL._SY522_.jpg",
+                Pages = 404,
+                Year = 2014,
+                Price = 15,
+            },
+            new Book
+            {
+                BookIsbn = " 784 ",
+                Name = "The Wheel of Time - The Eye of the World",
+                Author = "Robert Jordan",
+                CoverLink = "https://upload.wikimedia.org/wikipedia/en/thumb/0/00/WoT01_TheEyeOfTheWorld.jpg/250px-WoT01_TheEyeOfTheWorld.jpg",
+                Pages = 784,
+                Year = 1964,
+                Price = 30,
+            });            
 
         context.SaveChanges();
     }

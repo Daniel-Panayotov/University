@@ -12,26 +12,26 @@
         {
             <div class="book-container">
                 <div class="book">
-                    <img src="@book.CoverLink"/>
-                    @book.Name
+                    <div class="img-wrap">
+                        <img src="@book.CoverLink"/>
+                    </div>
+                    <div class="book-info">
+                        <span>@book.Name</span>
+                        <span>Author: @book.Author</span>
+                        <span>Pages: @book.Pages</span>
+                        <span>Year: @book.Year</span>
+                    </div>
+                    <div class="buy-section">
+                        <span>Price: @book.Price</span>
+                        <button @onclick="OrderBook">Order</button>
+                    </div>
                 </div>
             </div>
         }
-        <div class="book-container">
-            <div class="book">
-                baba
-            </div>
-        </div>
-        <div class="book-container">
-            <div class="book">
-                baba
-            </div>
-        </div>
     </div>
 
     @* <button @onclick="FetchBooks">Fetch</button> *@
 </div>
-
 
 @code {
     List<BookDTO> books = [];
@@ -50,7 +50,7 @@
 
     private async Task FetchBooks()
     {
-        var res = await httpClient.GetAsync("api/books/get-paginated?page=1&pageSize=3");
+        var res = await httpClient.GetAsync("api/books/get-paginated?page=1&pageSize=8");
         var value = await res.Content.ReadFromJsonAsync<List<BookDTO>>();
 
         if (!res.IsSuccessStatusCode) return;
@@ -58,4 +58,6 @@
         books = value!;
         StateHasChanged();
     }
+
+    private async Task OrderBook() {}
 }
