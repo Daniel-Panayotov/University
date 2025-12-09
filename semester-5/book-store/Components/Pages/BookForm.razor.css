@@ -1,4 +1,8 @@
-﻿.form-input {
+﻿.page-container {
+    max-width: 30rem;
+}
+
+.form-input {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -18,10 +22,6 @@
     margin: 0;
     white-space: nowrap;
 }
-
-    .resizable-input > input {
-        width: 100%;
-    }
 
 .form-actions {
     display: flex;

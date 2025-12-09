@@ -17,6 +17,7 @@ public class BookModel
 
     public BookModel(BookDTO src)
     {
+        ISBN = src.BookISBN;
         BookID = src.BookID;
         Name = src.Name;
         Author = src.Author;

@@ -8,17 +8,72 @@
 
 @rendermode InteractiveServer
 
-<EditForm Model="model">
-    <div class="form">
-        <div class="form-input">
-            <label for="module-name">Name</label>
-            <span class="resizable-input">
-               <InputText @bind-Value="model.Name" />
-            </span>
-            <ValidationMessage For="@(() => model.Name)" />
-         </div>
-    </div>
-</EditForm>
+<div class="page-container">
+    <EditForm Model="model" OnValidSubmit="Submit">
+        <div class="form">
+            <div class="form-input-group">
+                <div class="form-input">
+                    <label for="book-isbn">ISBN</label>
+                    <span class="resizable-input">
+                        <InputText id="book-isbn" @bind-Value="model.ISBN" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.ISBN)" />
+                 </div>
+
+                <div class="form-input">
+                    <label for="book-name">Title</label>
+                    <span class="resizable-input">
+                        <InputText id="book-name" @bind-Value="model.Name" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.Name)" />
+                </div>
+
+                <div class="form-input">
+                    <label for="book-author">Author</label>
+                    <span class="resizable-input">
+                        <InputText id="book-author" @bind-Value="model.Author" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.Author)" />
+                </div>
+
+                <div class="form-input">
+                    <label for="book-cover">Cover Link</label>
+                    <span class="resizable-input">
+                        <InputText id="book-cover" @bind-Value="model.CoverLink" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.CoverLink)" />
+                </div>
+
+                <div class="form-input">
+                    <label for="book-pages">Pages count</label>
+                    <span class="resizable-input">
+                        <InputNumber id="book-pages" @bind-Value="model.Pages" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.Pages)" />
+                </div>
+
+                <div class="form-input">
+                    <label for="book-year">Year</label>
+                    <span class="resizable-input">
+                        <InputNumber id="book-year" @bind-Value="model.Year" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.Year)" />
+                </div>
+
+                <div class="form-input">
+                    <label for="book-price">Price</label>
+                    <span class="resizable-input">
+                        <InputNumber id="book-price" @bind-Value="model.Price" style="width: 100%;" />
+                    </span>
+                    <ValidationMessage For="@(() => model.Price)" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Submit</button>
+            </div>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     [Parameter]
@@ -50,6 +105,9 @@
 
     private async Task Submit()
     {
-        
+        if (ID != null)
+        {
+            
+        }
     }
 }
