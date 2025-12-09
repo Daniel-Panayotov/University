@@ -70,6 +70,11 @@
             </div>
             <div class="form-actions">
                 <button type="submit">Submit</button>
+
+                @if (ID != null)
+                {                    
+                    <button @onclick="Delete">Delete</button>
+                }
             </div>
         </div>
     </EditForm>
@@ -105,9 +110,32 @@
 
     private async Task Submit()
     {
-        if (ID != null)
+        BookDTO? newDto; 
+        HttpResponseMessage? res;
+        try
         {
-            
+            newDto = model.ToDTO();
+
+            if (ID != null)
+                res = await httpClient.PutAsJsonAsync("api/books/edit?bookID=" + ID, newDto);
+            else 
+                res = await httpClient.PostAsJsonAsync("api/books/create", newDto);
+
+            if (!res.IsSuccessStatusCode) throw new Exception("Book could not be found.");
         }
+        catch { }
+        navigationManager.NavigateTo("/");
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            var res = await httpClient.DeleteAsync("api/books/delete-by-id?ID=" + ID);
+
+            if (!res.IsSuccessStatusCode) throw new Exception("BLABLA");
+        }
+        catch { }
+        navigationManager.NavigateTo("/");
     }
 }

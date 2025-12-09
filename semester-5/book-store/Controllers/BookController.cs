@@ -41,13 +41,45 @@ public class BookController : Controller
     [HttpPost("create")]
     public async Task<IActionResult> createOne([FromBody] BookDTO bookDTO)
     {
+        bool isDuplicate = await _ctx.Books.Where(b => b.BookIsbn == bookDTO.BookISBN).AnyAsync();
+        if (isDuplicate) return Conflict("Book with this isbn exists");
+
+        Book book = new Book() 
+        { 
+            BookIsbn = bookDTO.BookISBN,
+            Name = bookDTO.Name,
+            Author = bookDTO.Author,
+            CoverLink = bookDTO.CoverLink,
+            Pages = bookDTO.Pages,
+            Year = bookDTO.Year,
+            Price = bookDTO.Price,
+        };
+
+        _ctx.Add(book);
+
+        int entries = await _ctx.SaveChangesAsync();
+        if (entries == 0) return Problem("Could not save.");
 
         return Ok();
     }
 
     [HttpPut("edit")]
-    public async Task<IActionResult> editOne([FromBody] BookDTO bookDTO)
+    public async Task<IActionResult> editOne([FromBody] BookDTO bookDTO, [FromQuery] int bookID)
     {
+        Book? book = await _ctx.Books.Where(b => b.BookId == bookID).FirstOrDefaultAsync();
+        if (book == null) return NotFound("Book not found");
+
+        book.BookIsbn = bookDTO.BookISBN;
+        book.Name = bookDTO.Name;
+        book.Author = bookDTO.Author;
+        book.CoverLink = bookDTO.CoverLink;
+        book.Pages = bookDTO.Pages;
+        book.Year = bookDTO.Year;
+        book.Price = bookDTO.Price;
+
+        int entries = await _ctx.SaveChangesAsync();
+        if (entries == 0) return Problem("Could not save.");
+
         return Ok();
     }
 
