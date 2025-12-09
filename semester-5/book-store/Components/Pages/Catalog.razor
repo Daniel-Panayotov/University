@@ -23,7 +23,8 @@
                     </div>
                     <div class="buy-section">
                         <span>Price: @book.Price</span>
-                        <button @onclick="OrderBook">Order</button>
+                        <a href="/books/edit/@book.BookID">Edit</a>
+                        <button @onclick="() => OrderBook(book.BookID)">Order</button>
                     </div>
                 </div>
             </div>
@@ -59,5 +60,9 @@
         StateHasChanged();
     }
 
-    private async Task OrderBook() {}
+    private async Task OrderBook(int bookID)
+    {
+        var res = await httpClient.PostAsync("api/orders/new?bookID=" + bookID, null);
+        if (!res.IsSuccessStatusCode) return;
+    }
 }

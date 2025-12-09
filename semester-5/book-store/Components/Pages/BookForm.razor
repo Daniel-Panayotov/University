@@ -1,6 +1,55 @@
-﻿@page "/new"
+﻿@using book_store.Dtos;
 
+@page "/books/new"
+@page "/books/edit/{ID:int}"
+
+@inject HttpClient httpClient;
+@inject NavigationManager navigationManager
+
+@rendermode InteractiveServer
+
+<EditForm Model="model">
+    <div class="form">
+        <div class="form-input">
+            <label for="module-name">Name</label>
+            <span class="resizable-input">
+               <InputText @bind-Value="model.Name" />
+            </span>
+            <ValidationMessage For="@(() => model.Name)" />
+         </div>
+    </div>
+</EditForm>
 
 @code {
+    [Parameter]
+    public int? ID { get; set; }
 
+    private BookModel model = new BookModel();
+    private BookDTO? bookDTO;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (ID != null)
+        {
+            try
+            {
+                var res = await httpClient.GetAsync("api/books/get-one?ID=" + ID);
+                if (!res.IsSuccessStatusCode) throw new Exception("Book could not be found.");
+
+                var book = await res.Content.ReadFromJsonAsync<BookDTO>();
+                if (book == null) throw new Exception("");
+
+                bookDTO = book;
+                model = new BookModel(bookDTO);
+            } catch
+            {               
+                navigationManager.NavigateTo("/");
+            }
+        }
+    }
+
+    private async Task Submit()
+    {
+        
+    }
 }

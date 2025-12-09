@@ -29,10 +29,25 @@ public class BookController : Controller
         return Ok(bookDTOs);
     }
 
+    [HttpGet("get-one")]
+    public async Task<IActionResult> getOne([FromQuery] int ID)
+    {
+        Book? book = await _ctx.Books.Where(b => b.BookId == ID).FirstOrDefaultAsync();
+        if (book == null) return NotFound("Book could not be found");
+
+        return Ok(book.ToDTO());
+    }
+
     [HttpPost("create")]
-    public async Task<IActionResult> createOne([FromBody] int x)
+    public async Task<IActionResult> createOne([FromBody] BookDTO bookDTO)
     {
 
+        return Ok();
+    }
+
+    [HttpPut("edit")]
+    public async Task<IActionResult> editOne([FromBody] BookDTO bookDTO)
+    {
         return Ok();
     }
 
