@@ -1,0 +1,30 @@
+﻿.page-container {
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.orders-container {
+    height: 100%;
+    width: 100%;
+    max-width: 50rem;
+}
+
+.order-container {
+    float: left;
+    padding-inline: 0.25rem;
+    margin-bottom: 0.5rem;
+    width: 33%;
+}
+
+    .order-container .order {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        box-shadow: 0 3px 2px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+    }

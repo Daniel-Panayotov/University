@@ -2,6 +2,7 @@
 using book_store.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace book_store.Controllers;
 
@@ -10,7 +11,6 @@ namespace book_store.Controllers;
 public class BookController : Controller
 {
     private readonly BookStoreContext _ctx;
-
     public BookController(BookStoreContext dbCtx) {  _ctx = dbCtx; }
 
     [HttpGet("get-paginated")]
@@ -97,5 +97,5 @@ public class BookController : Controller
         if (rows == 0) return BadRequest("Could not delete book.");
 
         return Ok();
-    }
+    }    
 }

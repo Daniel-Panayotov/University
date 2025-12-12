@@ -1,4 +1,5 @@
-﻿using book_store.Models;
+﻿using book_store.Dtos;
+using book_store.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,5 +29,30 @@ public class OrderController : Controller
         if (entries != 2) return NotFound("idk man");
 
         return Ok();
+    }
+
+    [HttpGet("get-paginated")]
+    public async Task<IActionResult> getPaginated([FromQuery] string? search, [FromQuery] int? pageSize = 8, [FromQuery] int? page = 1)
+    {
+        if (string.IsNullOrWhiteSpace(search)) search = "";
+
+        var query = _ctx.Orders
+            .Where(o => o.RelOrderBooks.Any(ob => ob.Book.Name.ToLower().Contains(search.ToLower())
+                                         || ob.Book.Author.ToLower().Contains(search.ToLower())))
+            .Include(o => o.RelOrderBooks)
+                .ThenInclude(ob => ob.Book)            
+            .AsQueryable();
+
+        var count = await query.CountAsync();
+        if (count < (page.Value - 1) * pageSize.Value) return BadRequest("Invalid page.");
+
+        List<Order> orders = await query
+            .Skip((page.Value - 1) * pageSize.Value)
+            .Take(pageSize.Value)
+            .ToListAsync();
+
+        IEnumerable<OrderDTO> orderDTOs =  orders.Select(o => o.ToDTO());
+
+        return Ok(new paginatedOrdersDTO((int)Math.Ceiling((double)count / (page.Value * pageSize.Value)), orderDTOs));
     }
 }

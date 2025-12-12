@@ -1,6 +1,7 @@
 using book_store;
 using book_store.Components;
 using book_store.Data;
+using book_store.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<CsvService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7180") });
 builder.Services.AddDbContext<BookStoreContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Development")));
 

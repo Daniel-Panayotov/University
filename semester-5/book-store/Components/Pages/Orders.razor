@@ -1,0 +1,82 @@
+﻿@using book_store.Dtos;
+
+@inject HttpClient httpClient;
+
+@rendermode InteractiveServer
+
+@page "/orders/view";
+
+<div class="page-container">
+    <div class="search">
+        <input @bind-value="search" @oninput="async (ChangeEventArgs args) => await OnSearchInput(args)" />
+    </div>
+
+    <div class="orders-container">
+        @foreach(var order in orders)
+        {
+            <div class="order-container">
+                <div class="order">
+                    <span>User: @order.UserID</span>
+                    @foreach(var book in order.books)
+                    {
+                        <span>Book: @book.Name</span>
+                        <span>Author: @book.Author</span>
+                    }
+                    <span>Time: @order.OrderTime.ToString()</span>
+                    <span>Total: @order.TotalPrice</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="page-selector">
+        @for (int pageI = 1; pageI <= pageCount; pageI++)
+        {
+            <button @onclick="() => selectPage(pageI)" style="padding-inline:0.5rem;">@pageI</button>
+        }
+    </div>
+</div>
+
+@code {
+    private List<OrderDTO> orders = [];
+
+    private string search = "";
+    private int pageCount = 1;
+    private int selectedPage = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchOrders();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    private async Task OnSearchInput(ChangeEventArgs e)
+    {
+        search = e.Value!.ToString()!;
+        await FetchOrders();
+    }
+
+    private async Task selectPage(int page)
+    {
+        selectedPage = page;
+        await FetchOrders();
+    }
+
+    private async Task FetchOrders()
+    {
+        var res = await httpClient.GetAsync($"api/orders/get-paginated?page={selectedPage}&pageSize=8&search={search}");
+        var value = await res.Content.ReadFromJsonAsync<paginatedOrdersDTO>();
+
+        if (!res.IsSuccessStatusCode) return;
+
+        orders = value!.orders.ToList();
+        pageCount = value!.pages;
+        StateHasChanged();
+    }
+}
