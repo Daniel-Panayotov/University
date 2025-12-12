@@ -7,6 +7,10 @@
 @page "/"
 
 <div class="page-container">
+    <div class="search">
+        <input @bind-value="search" @oninput="async (ChangeEventArgs args) => await OnSearchInput(args)" />
+    </div>
+
     <div class="catalog">
         @foreach(var book in books)
         {
@@ -31,11 +35,20 @@
         }
     </div>
 
-    @* <button @onclick="FetchBooks">Fetch</button> *@
+    <div class="page-selector">
+        @for (int pageI = 1; pageI <= pageCount; pageI++)
+        {
+            <button @onclick="() => selectPage(pageI)" style="padding-inline:0.5rem;">@pageI</button>
+        }
+    </div>
 </div>
 
 @code {
     List<BookDTO> books = [];
+
+    private string search = "";
+    private int pageCount = 1;
+    private int selectedPage = 1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,14 +62,27 @@
         }
     }
 
+    private async Task OnSearchInput(ChangeEventArgs e)
+    {
+        search = e.Value!.ToString()!;
+        await FetchBooks();
+    }
+
+    private async Task selectPage(int page)
+    {
+        selectedPage = page;
+        await FetchBooks();
+    }
+
     private async Task FetchBooks()
     {
-        var res = await httpClient.GetAsync("api/books/get-paginated?page=1&pageSize=8");
-        var value = await res.Content.ReadFromJsonAsync<List<BookDTO>>();
+        var res = await httpClient.GetAsync($"api/books/get-paginated?page={selectedPage}&pageSize=8&search={search}");
+        var value = await res.Content.ReadFromJsonAsync<paginatedBooksDTO>();
 
         if (!res.IsSuccessStatusCode) return;
 
-        books = value!;
+        books = value!.books.ToList();
+        pageCount = value!.pages;
         StateHasChanged();
     }
 

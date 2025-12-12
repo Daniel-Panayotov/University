@@ -30,6 +30,12 @@ public class BookModel
     public BookDTO ToDTO() => new BookDTO(BookID, ISBN, Name, Author, CoverLink, Pages, Year, Price);
 };
 
+public record paginatedBooksDTO
+(
+    int pages,
+    IEnumerable<BookDTO> books
+);
+
 public record BookDTO (
     int BookID,
     string BookISBN,

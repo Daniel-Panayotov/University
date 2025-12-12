@@ -14,19 +14,25 @@ public class BookController : Controller
     public BookController(BookStoreContext dbCtx) {  _ctx = dbCtx; }
 
     [HttpGet("get-paginated")]
-    public async Task<IActionResult> getPaginated([FromQuery] string? search, [FromQuery] int? pageSize = 5, [FromQuery] int? page = 1)
+    public async Task<IActionResult> getPaginated([FromQuery] string? search, [FromQuery] int? pageSize = 8, [FromQuery] int? page = 1)
     {
         if (string.IsNullOrWhiteSpace(search)) search = "";
 
         var query = _ctx.Books
-            .Where(b => b.Name.ToLower().Contains(search.ToLower()) || b.Author.ToLower().Contains(search.ToLower()))
+            .Where(b => b.Name.ToLower().Contains(search.ToLower()) || b.Author.ToLower().Contains(search.ToLower()));
+
+        var count = await query.CountAsync();
+        if (count < (page.Value - 1) * pageSize.Value) return BadRequest("Invalid page.");
+
+        List<Book> books = await query
             .Skip((page.Value - 1) * pageSize.Value)
-            .Take(pageSize.Value);
+            .Take(pageSize.Value)
+            .ToListAsync();
+        IEnumerable<BookDTO> bookDTOs = books.Select(b => b.ToDTO());
 
-        List<Book> books = await query.ToListAsync();
-        List<BookDTO> bookDTOs = books.Select(b => b.ToDTO()).ToList();
+        Console.WriteLine($"\n\n\n\n{search}\n\n\n\n");
 
-        return Ok(bookDTOs);
+        return Ok(new paginatedBooksDTO((int)Math.Ceiling((double)count / (page.Value * pageSize.Value)), bookDTOs));
     }
 
     [HttpGet("get-one")]
